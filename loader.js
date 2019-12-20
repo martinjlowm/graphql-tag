@@ -42,9 +42,13 @@ function expandImports(source, doc) {
 module.exports = function(source) {
   this.cacheable();
   const doc = gql`${source}`;
+  const docSource = JSON.stringify(doc.loc.source)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, '\\\'');
+
   let headerCode = `
-    var doc = ${JSON.stringify(doc)};
-    doc.loc.source = ${JSON.stringify(doc.loc.source)};
+    var doc = JSON.parse('${JSON.stringify(doc)}');
+    doc.loc.source = JSON.parse('${docSource}');
   `;
 
   let outputCode = "";
